@@ -1,0 +1,69 @@
+---
+title: "R_Green_Week-1"
+
+overview: The data set was provided by the Centers for Disease Control and Prevention's National Center for Health Statistics. It contains records of births in the United States between 1994 and 2003. The article discusses the effects of people's superstion on the number of delivers on Friday the 13th.
+
+Link to article: https://fivethirtyeight.com/features/some-people-are-too-superstitious-to-have-a-baby-on-friday-the-13th/
+
+output: html_document
+date: "2024-09-01"
+---
+
+```{r}
+library(dplyr)
+library(dtplyr)
+library(magrittr)
+```
+
+
+Data set is retrieved from GITHUB and saved to data frame US_Births.
+
+```{r retrieve-from-github, include=FALSE, paged.print=FALSE}
+US_Births <- read.csv("https://raw.githubusercontent.com/RGreen-sps/RG-Week-1/main/US_births_1994-2003_CDC_NCHS.csv")
+```
+
+
+Created data frame for the year 1999
+
+```{r Filter-for-1999}
+births_1999 <- US_Births %>% 
+  filter(year == 1999)
+```
+
+
+Created a data frame called months_table with an index and the months of the year. This table will be joined to the the original data frame births_1999.
+
+```{r creating-months-dataframe}
+
+months_txt <- c("january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december")
+
+months_id <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+
+months_table <- data.frame(months_id, months_txt)
+
+```
+
+
+Created a data frame called days_table with an index and the days of the week. This table will be joined to the the original data frame births_1999.
+
+```{r creating-days-dataframe}
+days_id <- c(1, 2, 3, 4, 5, 6, 7)
+
+days_txt <- c("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
+
+days_table <- data.frame(days_id, days_txt)
+
+```
+
+
+Joining data frames days_table and months_table to the original data frame births_1999. 
+
+```{r joining-dataframes-months-days}
+
+births_1999 <- births_1999 %>% inner_join(months_table, by = c("month" = "months_id"))
+
+births_1999 <- births_1999 %>% inner_join(days_table, by = c("day_of_week" = "days_id"))
+
+```
+
+conclusion: The data frame (births_1999) used here is is a subset of the original data set. It contains information for the year 1999. The month and the day_of_week columns contains numbers that represented a month of the year, or a day of the week. Two character columns were added to clearly show the month and days. This makes for better reading.
